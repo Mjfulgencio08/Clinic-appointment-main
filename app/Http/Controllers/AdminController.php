@@ -145,11 +145,31 @@ class AdminController extends Controller
     public function showappointment(Request $request)
     {
 
+        // $query = User::whereHas('appoint', function ($query) {
+        //     $query->where('status', '!=', 'Canceled');
+        //     if(Auth::user()->usertype == 2) $query->where('doctor_id',Auth::user()->id);
+        // });
         $query = User::whereHas('appoint', function ($query) {
-            $query->where('status', '!=', 'Canceled');
-            if(Auth::user()->usertype == 2) $query->where('doctor_id',Auth::user()->id);
+            $query->where(function ($q) {
+                $q->where('status', '!=', 'Canceled')
+                  ->orWhere(function ($subQuery) {
+                    $subQuery->where('status', 'In progress');
+                    if (Auth::user()->usertype == 2) {
+                        $subQuery->orWhereNull('doctor_id');
+                    }
+                  });
+            });
+            if (Auth::user()->usertype == 2) {
+                $query->orWhere(function ($q) {
+                    $q->where('status', 'In progress');
+                });
+            }
+        })->when(Auth::user()->usertype == 2, function ($query) {
+            $query->orWhereHas('appoint', function ($query) {
+                $query->where('doctor_id', Auth::user()->id);
+            });
         });
-
+       
         $searchQ = null;
 
         if ($request->has('search')) {
@@ -585,9 +605,16 @@ class AdminController extends Controller
     {
         $data = User::with(['appoint' => function ($query) {
             if (Auth::user()->usertype == 2) {
-                $query->where('doctor_id', Auth::user()->id);
-            }
-        }])->find($id);
+            $query->where(function ($q) {
+                $q->where(function ($subQuery) {
+                    $subQuery->where('doctor_id', Auth::user()->id);
+                })
+                ->orWhere(function ($subQuery) {
+                    $subQuery->whereNull('doctor_id')
+                             ->where('status', 'In progress');
+                });
+            });
+        }}])->find($id);
 
         $doctors = User::where('usertype', 2)->get();
 
