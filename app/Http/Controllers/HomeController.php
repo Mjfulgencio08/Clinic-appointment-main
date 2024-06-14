@@ -40,11 +40,8 @@ class HomeController extends Controller
                     })
                     ->get();
                 
-                $pendingAppointments = Appointment::where('status', 'In progress')
-                    ->when(Auth::check() && Auth::user()->usertype == 2, function ($query) {
-                        $query->where('doctor_id', Auth::user()->id);
-                    })
-                    ->get();
+                $pendingAppointments = Appointment::where('status', 'In progress')->get();
+                   
                 $totalUsers = User::all();
                 $totalFeedbacks = UserFeedbacks::all();
                 $totalTestimonies = Testimony::all();
