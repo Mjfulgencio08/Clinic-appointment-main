@@ -25,10 +25,13 @@ class CreateAppointmentsTable extends Migration
             $table->string('time')->nullable();
             $table->string('reason')->nullable();
             $table->string('status')->nullable();
-            $table->string('user_id')->nullable();
-            $table->string('doctor_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('doctor_id')->nullable();
             $table->string('sms_status')->nullable()->default(false);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('doctor_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -41,4 +44,5 @@ class CreateAppointmentsTable extends Migration
     {
         Schema::dropIfExists('appointments');
     }
+
 }

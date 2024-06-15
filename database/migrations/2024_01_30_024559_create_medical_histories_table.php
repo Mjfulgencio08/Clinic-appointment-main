@@ -21,9 +21,12 @@ class CreateMedicalHistoriesTable extends Migration
             $table->string('va')->nullable();
             $table->string('add_or_va')->nullable();
             $table->string('remarks')->nullable();
-            $table->string('user_id')->nullable();
-            $table->string('appointment_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('appointment_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
         });
     }
 

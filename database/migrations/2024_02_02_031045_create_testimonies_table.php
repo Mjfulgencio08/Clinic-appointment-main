@@ -15,9 +15,11 @@ class CreateTestimoniesTable extends Migration
     {
         Schema::create('testimonies', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->longText('content')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
