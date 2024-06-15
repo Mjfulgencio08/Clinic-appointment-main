@@ -192,7 +192,7 @@ class AdminController extends Controller
 
             if (Auth::user()->usertype == 1 || Auth::user()->usertype == 2 || Auth::user()->usertype == 3) {
                 $users = User::orderBy('name', 'asc')->where('usertype', 0)->where('email_verified_at', '!=', null)->get();
-                $doctors = Doctor::all();
+                $doctors = User::where('usertype',2)->get();
 
                 return view('admin.showappointment', compact('usersWithAppointments', 'searchQ', 'users', 'doctors'));
             } else {

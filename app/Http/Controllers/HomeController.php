@@ -18,7 +18,7 @@ class HomeController extends Controller
 
         if (Auth::id()) {
             if (Auth::user()->usertype == '0') {
-                $doctor = Doctor::all();
+                $doctor = User::where('usertype',2)->get();
 
 
                 return view('user.home', compact('doctor'));
@@ -59,7 +59,7 @@ class HomeController extends Controller
             return redirect('home');
         } else {
 
-            $doctor = Doctor::all();
+            $doctor = User::where('usertype',2)->get();
             return view('user.home', compact('doctor'));
         }
     }
