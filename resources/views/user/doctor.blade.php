@@ -7,7 +7,7 @@
                 <div class="item">
                     <div class="card-doctor">
                         <div class="header">
-                            <img style="height: 300px !important;" height="300 px" src="doctorimage/{{ $doctors->image }}"
+                            <img style="height: 300px !important;" height="300 px" src="doctorimage/{{ $doctors->profile_photo_path  }}"
                                 alt="">
                             <div class="meta">
                                 <a href="#"><span class="mai-call"></span></a>
